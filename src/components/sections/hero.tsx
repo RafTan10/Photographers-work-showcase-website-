@@ -1,11 +1,18 @@
 import * as React from "react"
-import { ArrowDown } from "lucide-react"
+import { ArrowDown, User } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { CircularGallery } from "@/components/ui/circular-gallery"
 import { PHOTOGRAPHER, photos, toGalleryItem } from "@/data/photos"
+import { cn } from "@/lib/utils"
 
 const featured = photos.filter((p) => p.featured)
+
+/** Jump links under the ring, in page order: About comes right after the hero, then the work. */
+const HERO_LINKS = [
+  { href: "#about", label: "About", Icon: User, bounce: false },
+  { href: "#work", label: "View the work", Icon: ArrowDown, bounce: true },
+]
 
 interface HeroProps {
   onOpenPhoto: (slug: string) => void
@@ -41,16 +48,21 @@ export function Hero({ onOpenPhoto }: HeroProps) {
           <p className="hidden text-[11px] tracking-[0.3em] text-muted-foreground uppercase sm:block">
             Scroll to rotate
           </p>
-          <Button
-            asChild
-            variant="outline"
-            className="h-11 gap-2 rounded-full border-foreground/40 bg-background/60 px-6 text-sm text-foreground shadow-lg backdrop-blur-md hover:border-foreground hover:bg-foreground hover:text-background dark:border-foreground/40 dark:bg-background/60 dark:hover:bg-foreground"
-          >
-            <a href="#work">
-              View the work
-              <ArrowDown className="size-4 motion-safe:animate-bounce" />
-            </a>
-          </Button>
+          <div className="flex items-center gap-3">
+            {HERO_LINKS.map(({ href, label, Icon, bounce }) => (
+              <Button
+                key={href}
+                asChild
+                variant="outline"
+                className="h-11 gap-2 rounded-full border-foreground/40 bg-background/60 px-5 text-sm text-foreground shadow-lg backdrop-blur-md hover:border-foreground hover:bg-foreground hover:text-background sm:px-6 dark:border-foreground/40 dark:bg-background/60 dark:hover:bg-foreground"
+              >
+                <a href={href}>
+                  {label}
+                  <Icon className={cn("size-4", bounce && "motion-safe:animate-bounce")} />
+                </a>
+              </Button>
+            ))}
+          </div>
         </div>
       </div>
     </section>
